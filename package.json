@@ -1,7 +1,7 @@
 {
   "publisher": "saltand",
-  "name": "fork",
-  "displayName": "Fork",
+  "name": "fork-forked",
+  "displayName": "Fork-Forked",
   "version": "0.1.0",
   "packageManager": "pnpm@10.10.0",
   "description": "",
