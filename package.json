@@ -1,5 +1,5 @@
 {
-  "publisher": "imyangyong",
+  "publisher": "saltand",
   "name": "fork",
   "displayName": "Fork",
   "version": "0.1.0",
@@ -7,7 +7,7 @@
   "description": "",
   "repository": {
     "type": "git",
-    "url": "https://github.com/imyangyong/vscode-extension-fork"
+    "url": "https://github.com/saltand/vscode-extension-fork"
   },
   "categories": [
     "Other"
@@ -18,15 +18,41 @@
     "vscode": "^1.71.0"
   },
   "activationEvents": [
-    "onCommand:fork.open"
+    "onStartupFinished",
+    "onCommand:fork.open",
+    "onCommand:fork.openHere"
   ],
   "contributes": {
     "commands": [
       {
         "command": "fork.open",
-        "title": "Fork: open current git repository at fork app"
+        "title": "Fork: open current git repository at fork app",
+        "icon": "$(git-merge)"
+      },
+      {
+        "command": "fork.openHere",
+        "title": "Fork: open selected workspace in fork app",
+        "icon": "$(git-merge)"
       }
-    ]
+    ],
+    "menus": {
+      "explorer/context": [
+        {
+          "command": "fork.openHere",
+          "group": "navigation@10",
+          "when": "resourceScheme == file"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "Fork",
+      "properties": {
+        "fork.executablePath": {
+          "type": "string",
+          "default": ""
+        }
+      }
+    }
   },
   "scripts": {
     "vscode:prepublish": "pnpm run build",
