@@ -1,76 +1,77 @@
 {
-  "publisher": "saltand",
-  "name": "fork-forked",
-  "displayName": "Fork-Forked",
-  "version": "0.1.0",
-  "packageManager": "pnpm@10.10.0",
-  "description": "",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/saltand/vscode-extension-fork"
-  },
-  "categories": [
-    "Other"
-  ],
-  "main": "./dist/index.js",
-  "icon": "res/icon.webp",
-  "engines": {
-    "vscode": "^1.71.0"
-  },
-  "activationEvents": [
-    "onStartupFinished",
-    "onCommand:fork.open",
-    "onCommand:fork.openHere"
-  ],
-  "contributes": {
-    "commands": [
-      {
-        "command": "fork.open",
-        "title": "Fork: open current git repository at fork app",
-        "icon": "$(git-merge)"
-      },
-      {
-        "command": "fork.openHere",
-        "title": "Fork: open selected workspace in fork app",
-        "icon": "$(git-merge)"
-      }
-    ],
-    "menus": {
-      "explorer/context": [
-        {
-          "command": "fork.openHere",
-          "group": "navigation@10",
-          "when": "resourceScheme == file"
-        }
-      ]
+    "publisher": "saltand",
+    "name": "fork-forked",
+    "displayName": "Fork-Forked",
+    "version": "0.1.0",
+    "packageManager": "pnpm@10.10.0",
+    "description": "",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/saltand/vscode-extension-fork"
     },
-    "configuration": {
-      "title": "Fork",
-      "properties": {
-        "fork.executablePath": {
-          "type": "string",
-          "default": ""
+    "categories": [
+        "Other"
+    ],
+    "main": "./dist/index.js",
+    "icon": "res/icon.webp",
+    "engines": {
+        "vscode": "^1.71.0"
+    },
+    "activationEvents": [
+        "onStartupFinished",
+        "onCommand:fork.open",
+        "onCommand:fork.openHere"
+    ],
+    "contributes": {
+        "commands": [
+            {
+                "command": "fork.open",
+                "title": "Fork: open current git repository at fork app",
+                "icon": "$(git-merge)"
+            },
+            {
+                "command": "fork.openHere",
+                "title": "Fork: open selected workspace in fork app",
+                "icon": "$(git-merge)"
+            }
+        ],
+        "menus": {
+            "explorer/context": [
+                {
+                    "command": "fork.openHere",
+                    "group": "navigation@10",
+                    "when": "resourceScheme == file"
+                }
+            ]
+        },
+        "configuration": {
+            "title": "Fork",
+            "properties": {
+                "fork.executablePath": {
+                    "type": "string",
+                    "default": ""
+                }
+            }
         }
-      }
-    }
-  },
-  "scripts": {
-    "vscode:prepublish": "pnpm run build",
-    "build": "NODE_ENV=production tsup",
-    "dev": "NODE_ENV=development tsup --watch",
-    "lint": "eslint src --ext ts",
-    "lint:fix": "eslint --fix src --ext ts",
-    "publish": "vsce publish --no-dependencies",
-    "pack": "vsce package --no-dependencies"
-  },
-  "devDependencies": {
-    "@antfu/eslint-config": "^4.13.0",
-    "@types/node": "^22.15.12",
-    "@types/vscode": "^1.71.0",
-    "eslint": "^9.26.0",
-    "pnpm": "^10.10.0",
-    "tsup": "^8.4.0",
-    "typescript": "^5.8.3",
-    "vsce": "^2.10.0"
-  }
+    },
+    "scripts": {
+        "vscode:prepublish": "pnpm run build",
+        "build": "NODE_ENV=production tsup",
+        "dev": "NODE_ENV=development tsup --watch",
+        "lint": "eslint src --ext ts",
+        "lint:fix": "eslint --fix src --ext ts",
+        "publish": "vsce publish --no-dependencies",
+        "pack": "vsce package --no-dependencies"
+    },
+    "devDependencies": {
+        "@antfu/eslint-config": "^4.13.0",
+        "@types/node": "^22.15.12",
+        "@types/vscode": "^1.71.0",
+        "eslint": "^9.26.0",
+        "pnpm": "^10.10.0",
+        "tsup": "^8.4.0",
+        "typescript": "^5.8.3",
+        "vsce": "^2.10.0"
+    },
+    "license": "MIT"
 }
