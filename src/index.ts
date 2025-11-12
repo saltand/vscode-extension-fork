@@ -1,72 +1,12 @@
 import type { ExtensionContext, Uri, WorkspaceFolder } from 'vscode'
-import { exec, execFile } from 'node:child_process'
-import { existsSync } from 'node:fs'
-import { join } from 'node:path'
-import process, { env as nodeEnv } from 'node:process'
-import { promisify } from 'node:util'
-import { commands, StatusBarAlignment, env as vscodeEnv, window, workspace } from 'vscode'
-
-const execFileAsync = promisify(execFile)
-
-async function toWindowsPath(wslPath: string): Promise<string> {
-  const { stdout } = await execFileAsync('wslpath', ['-w', wslPath])
-  return stdout.trim()
-}
-
-async function toWslPath(winPath: string): Promise<string> {
-  const { stdout } = await execFileAsync('wslpath', ['-a', winPath])
-  return stdout.trim()
-}
-
-async function openWSL(rootPath: string) {
-  try {
-    const winRepo = await toWindowsPath(rootPath)
-
-    const configured = workspace.getConfiguration('fork').get<string>('executablePath') || ''
-    const exeWslCandidates: string[] = []
-
-    if (configured) {
-      if (/^[a-z]:\\|^\\\\\\\\/i.test(configured) || configured.includes('\\')) {
-        try {
-          const p = await toWslPath(configured)
-          exeWslCandidates.push(p)
-        }
-        catch {}
-      }
-      else {
-        exeWslCandidates.push(configured)
-      }
-    }
-
-    exeWslCandidates.push(
-      '/mnt/c/Program Files/Fork/Fork.exe',
-      '/mnt/c/Program Files (x86)/Fork/Fork.exe',
-    )
-
-    const exeWsl = exeWslCandidates.find(p => !!p && existsSync(p))
-    if (!exeWsl) {
-      window.showErrorMessage('Fork error (WSL): Could not find Fork.exe. Please set "fork.executablePath" (Windows path).')
-      return
-    }
-
-    execFile(exeWsl, [winRepo], (err: any) => {
-      if (err)
-        window.showErrorMessage(`Fork error (WSL): ${err.message || err}`)
-    })
-  }
-  catch (e: any) {
-    window.showErrorMessage(`Fork error (WSL): ${e?.message || e}`)
-  }
-}
+import { exec } from 'node:child_process'
+import process from 'node:process'
+import { commands, StatusBarAlignment, window, workspace } from 'vscode'
 
 async function openWithFork(rootPath: string) {
-  if (vscodeEnv.remoteName === 'wsl') {
-    await openWSL(rootPath)
-    return
-  }
   const platform = process.platform
   if (platform === 'darwin') {
-    const quoted = rootPath.replace(/"/g, '\\"')
+    const quoted = rootPath.replace(/\"/g, '\\\"')
     exec(`open -a "Fork" "${quoted}"`, (err: any) => {
       if (err) {
         window.showErrorMessage(`Fork error: ${err}`)
@@ -75,32 +15,7 @@ async function openWithFork(rootPath: string) {
     return
   }
 
-  if (platform === 'win32') {
-    const configured = workspace.getConfiguration('fork').get<string>('executablePath') || ''
-    const candidates: string[] = []
-    if (configured)
-      candidates.push(configured)
-    if (nodeEnv.LOCALAPPDATA)
-      candidates.push(join(nodeEnv.LOCALAPPDATA, 'Fork', 'Fork.exe'))
-    if (nodeEnv.ProgramFiles)
-      candidates.push(join(nodeEnv.ProgramFiles, 'Fork', 'Fork.exe'))
-    if (nodeEnv['ProgramFiles(x86)'] as string | undefined)
-      candidates.push(join(nodeEnv['ProgramFiles(x86)'] as string, 'Fork', 'Fork.exe'))
-
-    const exe = candidates.find(p => !!p && existsSync(p))
-    if (!exe) {
-      window.showErrorMessage('Fork error: Could not find Fork.exe. Please set "fork.executablePath" in settings.')
-      return
-    }
-
-    execFile(exe, [rootPath], (err: any) => {
-      if (err)
-        window.showErrorMessage(`Fork error: ${err.message || err}`)
-    })
-    return
-  }
-
-  window.showErrorMessage('Fork error: Unsupported platform. Only macOS and Windows are supported currently.')
+  window.showErrorMessage('Fork error: Unsupported platform. Only macOS is supported.')
 }
 
 async function resolveRootPath(uri?: Uri): Promise<string | undefined> {
@@ -173,3 +88,4 @@ export async function activate(context: ExtensionContext) {
 
 // this method is called when your extension is deactivated
 export async function deactivate() {}
+

@@ -2,7 +2,7 @@
     "publisher": "saltand",
     "name": "fork-forked",
     "displayName": "Fork-Forked",
-    "version": "0.1.0",
+    "version": "0.2.0",
     "packageManager": "pnpm@10.10.0",
     "description": "",
     "repository": {
@@ -17,6 +17,9 @@
     "engines": {
         "vscode": "^1.71.0"
     },
+    "os": [
+        "darwin"
+    ],
     "activationEvents": [
         "onStartupFinished",
         "onCommand:fork.open",
@@ -34,25 +37,7 @@
                 "title": "Fork: open selected workspace in fork app",
                 "icon": "$(git-merge)"
             }
-        ],
-        "menus": {
-            "explorer/context": [
-                {
-                    "command": "fork.openHere",
-                    "group": "navigation@10",
-                    "when": "resourceScheme == file"
-                }
-            ]
-        },
-        "configuration": {
-            "title": "Fork",
-            "properties": {
-                "fork.executablePath": {
-                    "type": "string",
-                    "default": ""
-                }
-            }
-        }
+        ]
     },
     "scripts": {
         "vscode:prepublish": "pnpm run build",
