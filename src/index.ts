@@ -57,14 +57,6 @@ export async function activate(context: ExtensionContext) {
   // eslint-disable-next-line no-console
   console.log('Congratulations, your extension "fork" is now active!')
 
-  // Status bar button on the right bottom corner
-  const sb = window.createStatusBarItem(StatusBarAlignment.Right, 0)
-  sb.name = 'Fork'
-  sb.text = '$(git-merge)'
-  sb.tooltip = 'Fork: open current git repository at fork app'
-  sb.command = 'fork.open'
-  sb.show()
-
   const openCmd = commands.registerCommand('fork.open', async () => {
     const rootPath = await resolveRootPath()
     if (!rootPath) {
@@ -83,9 +75,19 @@ export async function activate(context: ExtensionContext) {
     await openWithFork(rootPath)
   })
 
-  context.subscriptions.push(openCmd, openHereCmd, sb)
+  context.subscriptions.push(openCmd, openHereCmd)
+
+  if (process.platform === 'darwin') {
+    // Status bar button on the right bottom corner (macOS only)
+    const sb = window.createStatusBarItem(StatusBarAlignment.Right, 0)
+    sb.name = 'Fork'
+    sb.text = '$(git-merge)'
+    sb.tooltip = 'Fork: open current git repository at fork app'
+    sb.command = 'fork.open'
+    sb.show()
+    context.subscriptions.push(sb)
+  }
 }
 
 // this method is called when your extension is deactivated
 export async function deactivate() {}
-

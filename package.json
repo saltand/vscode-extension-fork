@@ -2,7 +2,7 @@
     "publisher": "saltand",
     "name": "fork-forked",
     "displayName": "Fork-Forked",
-    "version": "0.2.0",
+    "version": "0.3.0",
     "packageManager": "pnpm@10.10.0",
     "description": "",
     "repository": {
