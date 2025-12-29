@@ -18,7 +18,8 @@
         "vscode": "^1.71.0"
     },
     "os": [
-        "darwin"
+        "darwin",
+        "win32"
     ],
     "activationEvents": [
         "onStartupFinished",
@@ -37,7 +38,17 @@
                 "title": "Fork: open selected workspace in fork app",
                 "icon": "$(git-merge)"
             }
-        ]
+        ],
+        "configuration": {
+            "title": "Fork",
+            "properties": {
+                "fork.windowsPath": {
+                    "type": "string",
+                    "default": "",
+                    "description": "Path to Fork.exe on Windows. Defaults to %LOCALAPPDATA%\\Fork\\current\\Fork.exe if empty."
+                }
+            }
+        }
     },
     "scripts": {
         "vscode:prepublish": "pnpm run build",

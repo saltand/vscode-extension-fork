@@ -1,7 +1,13 @@
 import type { ExtensionContext, Uri, WorkspaceFolder } from 'vscode'
 import { exec } from 'node:child_process'
+import path from 'node:path'
 import process from 'node:process'
 import { commands, StatusBarAlignment, window, workspace } from 'vscode'
+
+function getDefaultWindowsForkPath(): string {
+  const localAppData = process.env.LOCALAPPDATA || path.join(process.env.USERPROFILE || '', 'AppData', 'Local')
+  return path.join(localAppData, 'Fork', 'current', 'Fork.exe')
+}
 
 async function openWithFork(rootPath: string) {
   const platform = process.platform
@@ -15,7 +21,19 @@ async function openWithFork(rootPath: string) {
     return
   }
 
-  window.showErrorMessage('Fork error: Unsupported platform. Only macOS is supported.')
+  if (platform === 'win32') {
+    const config = workspace.getConfiguration('fork')
+    const forkPath = config.get<string>('windowsPath') || getDefaultWindowsForkPath()
+    const quoted = rootPath.replace(/"/g, '\\"')
+    exec(`"${forkPath}" "${quoted}"`, (err: any) => {
+      if (err) {
+        window.showErrorMessage(`Fork error: ${err}`)
+      }
+    })
+    return
+  }
+
+  window.showErrorMessage('Fork error: Unsupported platform. Only macOS and Windows are supported.')
 }
 
 async function resolveRootPath(uri?: Uri): Promise<string | undefined> {
@@ -77,8 +95,8 @@ export async function activate(context: ExtensionContext) {
 
   context.subscriptions.push(openCmd, openHereCmd)
 
-  if (process.platform === 'darwin') {
-    // Status bar button on the right bottom corner (macOS only)
+  if (process.platform === 'darwin' || process.platform === 'win32') {
+    // Status bar button on the right bottom corner (macOS and Windows)
     const sb = window.createStatusBarItem(StatusBarAlignment.Right, 0)
     sb.name = 'Fork'
     sb.text = '$(git-merge)'
