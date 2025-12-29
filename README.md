@@ -9,7 +9,12 @@ This extension provide a simple way to use Fork app.
 
 ## Platform support
 
-- macOS only: Uses `open -a "Fork"`.
+- macOS: Uses `open -a "Fork"`.
+- Windows: Uses Fork.exe (configurable path).
+
+## Settings
+
+- **fork.windowsPath**: Path to Fork.exe on Windows. Defaults to `%LOCALAPPDATA%\Fork\current\Fork.exe` if empty.
 
 ## Release Notes
 
